@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import libpyjak.http.server as server
+from http import server as server
 
 # Routes will be matched in order.
 # Only the first matching route will be served.
@@ -33,5 +33,5 @@ class TestHandler(server.RequestHandler):
 		return 'this was the #3 test!\n\n'
 
 
-
-server.run()
+if __name__ == '__main__':
+	server.run()
