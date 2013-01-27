@@ -7,7 +7,10 @@
 from twisted.web import server, resource, error
 from twisted.python import log
 from twisted.internet import reactor, defer
+
+from http.request import RequestHandler
 import sys, re
+
 
 
 HANDLERS = []
@@ -19,11 +22,6 @@ class TimeoutResource(resource.ErrorPage):
 	brief = 'This response timed out.'
 	detail = 'A useful response was not generated in time. Sorry.'
 
-class RequestHandler(object):
-	request = None
-
-	def __init__(self, request, *a, **kw):
-		self.request = request
 
 
 class PyjakResource(resource.Resource):
@@ -105,9 +103,6 @@ class PyjakResource(resource.Resource):
 				_deferred = defer.maybeDeferred(m, *(match.groups()), **(match.groupdict()))
 				_deferred.addErrback(request.processingFailed)
 				_deferred.addCallback(_coersion)
-				
-
-	
 
 		return server.NOT_DONE_YET
 
