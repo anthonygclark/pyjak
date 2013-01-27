@@ -5,10 +5,9 @@
 # https://github.com/twisted/klein/blob/master/klein/resource.py
 
 from twisted.web import server, resource, error
-from twisted.python import log
-from twisted.internet import reactor, defer
+from twisted.internet import defer
 
-from http.request import RequestHandler
+from request import RequestHandler
 import sys, re
 
 
@@ -19,7 +18,7 @@ SERVER_TIMEOUT = 3 # seconds
 
 class TimeoutResource(resource.ErrorPage):
 	code = 408
-	brief = 'This response timed out.'
+	brief = 'This request timed out.'
 	detail = 'A useful response was not generated in time. Sorry.'
 
 
@@ -107,13 +106,6 @@ class PyjakResource(resource.Resource):
 		return server.NOT_DONE_YET
 
 
-def run(host = None, port = 8080, logfile = None, timeout = SERVER_TIMEOUT):
-	logfile = logfile or sys.stdout
-	log.startLogging(logfile)
-	reactor.listenTCP(port, server.Site(PyjakResource(), timeout = timeout or 60), interface = host or '0.0.0.0')
-	reactor.run()
-
-
 # RequestHandler route decorator
 def route(*a, **kw):
 	def _method(cls):
@@ -122,5 +114,6 @@ def route(*a, **kw):
 	return _method
 
 
-if __name__ == '__main__':
-	run()
+def register(config, reactor, timeout = 0):
+	reactor.listenTCP(config.http_port, server.Site(PyjakResource(), timeout = int(timeout) or 60), interface = config.http_host)
+

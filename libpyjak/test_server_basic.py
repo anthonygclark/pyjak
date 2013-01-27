@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 from http import server as server
+import service
+
 
 # Routes will be matched in order.
 # Only the first matching route will be served.
@@ -34,4 +36,4 @@ class TestHandler(server.RequestHandler):
 
 
 if __name__ == '__main__':
-	server.run()
+	service.run()

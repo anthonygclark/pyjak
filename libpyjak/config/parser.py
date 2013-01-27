@@ -50,7 +50,7 @@ class PyjakConfig(object):
 		# Read options from command line first
 		options, args = _options(origin)
 	
-		_network = (options.cluster_network or len(options.cluster_network)) and options.cluster_network or [ CLUSTER_NETWORK_DEFAULT ]
+		_network = (options.cluster_network and len(options.cluster_network)) and options.cluster_network or [ CLUSTER_NETWORK_DEFAULT ]
 		
 		if options.director_mode:
 			self.director_network.extend(_network)
@@ -58,9 +58,7 @@ class PyjakConfig(object):
 		if options.worker_mode:
 			self.worker_network.extend(_network)
 
-		self.logfile = options.logfile or LOGFILE_DEFAULT
-
-		self.mode = options.mode or 'worker' # default
+		self.logfile = options.logfile
 
 		# Read options from config file
 		if options.configfile and os.path.isfile(options.configfile):
